@@ -39,6 +39,10 @@
       </div>
     </nav>
     <div class="sidebar-bottom">
+      <div class="lang-switcher" style="margin-bottom: 12px;">
+        <button class="lang-btn" id="btnLangFR" onclick="setLanguage('fr')">FR</button>
+        <button class="lang-btn" id="btnLangEN" onclick="setLanguage('en')">EN</button>
+      </div>
       <div class="nav-item" onclick="doLogout()">
         <span class="nav-icon">🚪</span><span data-translate="logout">Déconnexion</span>
       </div>
@@ -100,6 +104,8 @@
   </div>
 </div>
 
+<script src="../js/lang/fr.js"></script>
+<script src="../js/lang/en.js"></script>
 <script src="../js/languages.js"></script>
 <script src="../js/db.js"></script>
 <script src="../js/budgets.js"></script>
