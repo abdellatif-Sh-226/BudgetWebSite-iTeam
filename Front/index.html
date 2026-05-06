@@ -1,3 +1,78 @@
-<html>
-    
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-translate="appTitle">Budget Tracker</title>
+    <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1 data-translate="appTitle">Budget Tracker</h1>
+            <p data-translate="welcome">Welcome to your personal budget manager</p>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Language Selector -->
+        <div style="text-align: right; margin-bottom: 20px;">
+            <label for="language-select">Language:</label>
+            <select id="language-select">
+                <option value="en">English</option>
+                <option value="es">Español</option>
+            </select>
+        </div>
+
+        <!-- Balance Overview -->
+        <section class="balance">
+            <div class="balance-card">
+                <h2 data-translate="currentBalance">Current Balance</h2>
+                <div class="amount" id="current-balance">$0.00</div>
+            </div>
+            <div class="balance-card income">
+                <h2 data-translate="totalIncome">Total Income</h2>
+                <div class="amount" id="total-income">$0.00</div>
+            </div>
+            <div class="balance-card expense">
+                <h2 data-translate="totalExpenses">Total Expenses</h2>
+                <div class="amount" id="total-expenses">$0.00</div>
+            </div>
+        </section>
+
+        <!-- Add Transaction Form -->
+        <section class="transaction-form">
+            <h2 data-translate="addTransaction">Add Transaction</h2>
+            <form id="transaction-form">
+                <div class="form-group">
+                    <label for="transaction-type" data-translate="transactionType">Type:</label>
+                    <select id="transaction-type" required>
+                        <option value="income" data-translate="income">Income</option>
+                        <option value="expense" data-translate="expense">Expense</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="amount" data-translate="amount">Amount:</label>
+                    <input type="number" id="amount" step="0.01" min="0.01" required>
+                </div>
+                <div class="form-group">
+                    <label for="description" data-translate="description">Description:</label>
+                    <input type="text" id="description" required>
+                </div>
+                <button type="submit" class="btn" data-translate="add">Add</button>
+            </form>
+        </section>
+
+        <!-- Transaction List -->
+        <section class="transaction-list">
+            <h2 data-translate="recentTransactions">Recent Transactions</h2>
+            <div id="transaction-list">
+                <p data-translate="noTransactions">No transactions yet</p>
+            </div>
+        </section>
+    </main>
+
+    <script src="assets/js/languages.js"></script>
+    <script src="assets/js/app.js"></script>
+</body>
 </html>
