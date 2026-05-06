@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Connexion - BudgetCollab</title>
+  <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+  <div class="auth-wrap">
+    <div class="auth-box">
+      <div class="auth-logo">💰 BudgetCollab</div>
+      <div class="auth-sub">Connexion — Les comptes sont créés par l'administrateur</div>
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" id="loginEmail" placeholder="vous@exemple.com">
+      </div>
+      <div class="form-group">
+        <label>Mot de passe</label>
+        <input type="password" id="loginPwd" placeholder="••••••••">
+      </div>
+      <button class="btn" onclick="doLogin()">Se connecter</button>
+      <div class="auth-err err" id="authErr"></div>
+      <div class="demo-accounts">
+        <div class="demo-title">Comptes de démonstration :</div>
+        <div>👑 Admin : <strong>admin@demo.com</strong> / <strong>admin123</strong></div>
+        <div>👤 User : <strong>sara@demo.com</strong> / <strong>sara123</strong></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="../js/languages.js"></script>
+  <script src="../js/db.js"></script>
+  <script src="../js/auth.js"></script>
+  <script>
+    if (getCurrentUser()) {
+      window.location.replace('dashboard.html');
+    }
+  </script>
+</body>
+</html>

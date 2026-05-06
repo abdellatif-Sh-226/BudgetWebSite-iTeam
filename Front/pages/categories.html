@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title data-translate="categories">Catégories - BudgetCollab</title>
+  <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+
+<div class="app">
+  <div class="sidebar">
+    <div class="sidebar-logo">💰 <span data-translate="appTitle">BudgetCollab</span></div>
+    <div class="sidebar-user">
+      <div class="avatar" id="sidebarAvatar">A</div>
+      <div class="sidebar-user-info">
+        <div class="sidebar-user-name" id="sidebarName">Admin</div>
+        <div id="sidebarRoleBadge"></div>
+      </div>
+    </div>
+    <nav class="nav" id="sidebarNav">
+      <div class="nav-item" onclick="navigateTo('dashboard')">
+        <span class="nav-icon">📊</span><span data-translate="dashboard">Tableau de bord</span>
+      </div>
+      <div class="nav-item" onclick="navigateTo('transactions')">
+        <span class="nav-icon">💳</span><span data-translate="transactions">Transactions</span>
+      </div>
+      <div class="nav-item" onclick="navigateTo('budgets')">
+        <span class="nav-icon">📈</span><span data-translate="budgets">Budgets</span>
+      </div>
+      <div class="nav-item active" onclick="navigateTo('categories')">
+        <span class="nav-icon">🏷️</span><span data-translate="categories">Catégories</span>
+      </div>
+      <div class="nav-item" onclick="navigateTo('profile')">
+        <span class="nav-icon">👤</span><span data-translate="profile">Profil</span>
+      </div>
+      <div class="nav-item" onclick="navigateTo('shared')">
+        <span class="nav-icon">🤝</span><span data-translate="shared">Partagés</span>
+      </div>
+    </nav>
+    <div class="sidebar-bottom">
+      <div class="nav-item" onclick="doLogout()">
+        <span class="nav-icon">🚪</span><span data-translate="logout">Déconnexion</span>
+      </div>
+    </div>
+  </div>
+
+  <main class="main">
+    <div class="page active" id="categoriesPage">
+      <div class="page-header">
+        <div>
+          <div class="page-title" data-translate="categories">Catégories</div>
+          <div class="page-subtitle">Gérez vos catégories de dépenses</div>
+        </div>
+        <button class="btn" onclick="openCategoryModal()" data-translate="addCategory">Ajouter une catégorie</button>
+      </div>
+
+      <div class="section">
+        <div class="categories-grid" id="categoriesGrid"></div>
+        <div class="empty-state" id="noCategories" data-translate="noCategories">Aucune catégorie</div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- Category Modal -->
+<div class="modal-overlay" id="categoryModal">
+  <div class="modal">
+    <div class="modal-title" data-translate="addCategory">Ajouter une catégorie</div>
+    <div class="form-group">
+      <label data-translate="categoryName">Nom de la catégorie</label>
+      <input type="text" id="categoryName" placeholder="Ex: Alimentation, Transport...">
+    </div>
+    <div class="form-group">
+      <label data-translate="color">Couleur</label>
+      <input type="color" id="categoryColor" value="#e94560">
+    </div>
+    <div class="form-group">
+      <label data-translate="description">Description (optionnel)</label>
+      <textarea id="categoryDesc" rows="2" placeholder="..."></textarea>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" onclick="closeModal('categoryModal')" data-translate="cancel">Annuler</button>
+      <button class="btn" onclick="saveCategory()" data-translate="save">Enregistrer</button>
+    </div>
+  </div>
+</div>
+
+<script src="../js/languages.js"></script>
+<script src="../js/db.js"></script>
+<script src="../js/categories.js"></script>
+<script>
+// Navigation function
+function navigateTo(page) {
+  window.location.href = `${page}.html`;
+}
+
+// Check authentication
+if (!getCurrentUser()) {
+  window.location.href = 'login.html';
+} else {
+  CU = getCurrentUser();
+}
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', () => {
+  updateUI();
+  loadCategories();
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title data-translate="dashboard">Tableau de bord - BudgetCollab</title>
+  <link rel="stylesheet" href="../css/styles.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+</head>
+<body>
+
+<div class="app">
+  <div class="sidebar">
+    <div class="sidebar-logo">💰 <span data-translate="appTitle">BudgetCollab</span></div>
+    <div class="sidebar-user">
+      <div class="avatar" id="sidebarAvatar">A</div>
+      <div class="sidebar-user-info">
+        <div class="sidebar-user-name" id="sidebarName">Admin</div>
+        <div id="sidebarRoleBadge"></div>
+      </div>
+    </div>
+    <nav class="nav" id="sidebarNav">
+      <div class="nav-item active" onclick="navigateTo('dashboard')">
+        <span class="nav-icon">📊</span><span data-translate="dashboard">Tableau de bord</span>
+      </div>
+      <div class="nav-item" onclick="navigateTo('transactions')">
+        <span class="nav-icon">💳</span><span data-translate="transactions">Transactions</span>
+      </div>
+      <div class="nav-item" onclick="navigateTo('budgets')">
+        <span class="nav-icon">📈</span><span data-translate="budgets">Budgets</span>
+      </div>
+      <div class="nav-item" onclick="navigateTo('categories')">
+        <span class="nav-icon">🏷️</span><span data-translate="categories">Catégories</span>
+      </div>
+      <div class="nav-item" onclick="navigateTo('profile')">
+        <span class="nav-icon">👤</span><span data-translate="profile">Profil</span>
+      </div>
+      <div class="nav-item" onclick="navigateTo('shared')">
+        <span class="nav-icon">🤝</span><span data-translate="shared">Partagés</span>
+      </div>
+    </nav>
+    <div class="sidebar-bottom">
+      <div class="nav-item" onclick="doLogout()">
+        <span class="nav-icon">🚪</span><span data-translate="logout">Déconnexion</span>
+      </div>
+    </div>
+  </div>
+
+  <main class="main">
+    <div class="page active" id="dashboardPage">
+      <div class="page-header">
+        <div>
+          <div class="page-title" data-translate="dashboard">Tableau de bord</div>
+          <div class="page-subtitle" id="dashDate"></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px">
+          <span id="dashRoleInfo"></span>
+          <button class="btn btn-secondary btn-sm" onclick="openProfileModal()">✏️ Mon profil</button>
+        </div>
+      </div>
+      <div id="dashAlerts"></div>
+      <div class="cards-grid" id="dashCards"></div>
+      <div class="two-col">
+        <div class="section">
+          <div class="section-title" style="margin-bottom:16px">Répartition des dépenses</div>
+          <div class="chart-wrap"><canvas id="pieChart"></canvas></div>
+        </div>
+        <div class="section">
+          <div class="section-title" style="margin-bottom:16px">Évolution mensuelle</div>
+          <div class="chart-wrap"><canvas id="lineChart"></canvas></div>
+        </div>
+      </div>
+      <div class="section">
+        <div class="section-header">
+          <span class="section-title" data-translate="recentTransactions">Transactions récentes</span>
+        </div>
+        <table class="table">
+          <thead>
+            <tr>
+              <th data-translate="date">Date</th>
+              <th data-translate="description">Description</th>
+              <th data-translate="category">Catégorie</th>
+              <th data-translate="amount">Montant</th>
+            </tr>
+          </thead>
+          <tbody id="dashTxBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- Transaction Modal -->
+<div class="modal-overlay" id="txModal">
+  <div class="modal">
+    <div class="modal-title" data-translate="addTransaction">Ajouter une transaction</div>
+    <div class="form-group">
+      <label data-translate="type">Type</label>
+      <select id="txType">
+        <option value="income" data-translate="income">Revenu</option>
+        <option value="expense" data-translate="expense">Dépense</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label data-translate="description">Description</label>
+      <input type="text" id="txDesc" placeholder="Ex: Loyer, Salaire...">
+    </div>
+    <div class="form-group">
+      <label data-translate="amount">Montant (TND)</label>
+      <input type="number" id="txAmount" placeholder="0.00" min="0" step="0.01">
+    </div>
+    <div class="form-group">
+      <label data-translate="date">Date</label>
+      <input type="date" id="txDate">
+    </div>
+    <div class="form-group">
+      <label data-translate="destination">Destination</label>
+      <select id="txDest" onchange="syncTxTypeToDestination()">
+        <option value="wallet" data-translate="wallet">📱 Mon portefeuille</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label data-translate="category">Catégorie</label>
+      <select id="txCat"></select>
+    </div>
+    <div class="form-group">
+      <label data-translate="notes">Notes (optionnel)</label>
+      <textarea id="txNotes" rows="2" placeholder="..."></textarea>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" onclick="closeModal('txModal')" data-translate="cancel">Annuler</button>
+      <button class="btn" onclick="saveTx()" data-translate="save">Enregistrer</button>
+    </div>
+  </div>
+</div>
+
+<script src="../js/languages.js"></script>
+<script src="../js/db.js"></script>
+<script src="../js/dashboard.js"></script>
+<script>
+// Navigation function
+function navigateTo(page) {
+  window.location.href = `${page}.html`;
+}
+
+// Check authentication
+if (!getCurrentUser()) {
+  window.location.href = 'login.html';
+} else {
+  CU = getCurrentUser();
+}
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', () => {
+  updateUI();
+  loadDashboard();
+});
+</script>
+</body>
+</html>
