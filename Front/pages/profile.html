@@ -1,158 +1,164 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title data-translate="profile">Profil - BudgetCollab</title>
-  <link rel="stylesheet" href="../css/colors.css">
-  <link rel="stylesheet" href="../css/styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-translate="profile">Profil - BudgetCollab</title>
+    <link rel="stylesheet" href="../css/styles.css">
 </head>
+
 <body>
 
-<div class="app">
-  <div class="sidebar">
-    <div class="sidebar-logo">💰 <span data-translate="appTitle">BudgetCollab</span></div>
-    <div class="sidebar-user">
-      <div class="avatar" id="sidebarAvatar">A</div>
-      <div class="sidebar-user-info">
-        <div class="sidebar-user-name" id="sidebarName">Admin</div>
-        <div id="sidebarRoleBadge"></div>
-      </div>
-    </div>
-    <nav class="nav" id="sidebarNav">
-      <div class="nav-item" onclick="navigateTo('dashboard')">
-        <span class="nav-icon">📊</span><span data-translate="dashboard">Tableau de bord</span>
-      </div>
-      <div class="nav-item" onclick="navigateTo('transactions')">
-        <span class="nav-icon">💳</span><span data-translate="transactions">Transactions</span>
-      </div>
-      <div class="nav-item" onclick="navigateTo('budgets')">
-        <span class="nav-icon">📈</span><span data-translate="budgets">Budgets</span>
-      </div>
-      <div class="nav-item" onclick="navigateTo('categories')">
-        <span class="nav-icon">🏷️</span><span data-translate="categories">Catégories</span>
-      </div>
-      <div class="nav-item active" onclick="navigateTo('profile')">
-        <span class="nav-icon">👤</span><span data-translate="profile">Profil</span>
-      </div>
-      <div class="nav-item" onclick="navigateTo('shared')">
-        <span class="nav-icon">🤝</span><span data-translate="shared">Partagés</span>
-      </div>
-    </nav>
-    <div class="sidebar-bottom">
-      <div class="lang-switcher" style="margin-bottom: 12px;">
-        <button class="lang-btn" id="btnLangFR" onclick="setLanguage('fr')">FR</button>
-        <button class="lang-btn" id="btnLangEN" onclick="setLanguage('en')">EN</button>
-      </div>
-      <div class="nav-item" onclick="doLogout()">
-        <span class="nav-icon">🚪</span><span data-translate="logout">Déconnexion</span>
-      </div>
-    </div>
-  </div>
-
-  <main class="main">
-    <div class="page active" id="profilePage">
-      <div class="page-header">
-        <div>
-          <div class="page-title" data-translate="profile">Profil</div>
-          <div class="page-subtitle">Gérez vos informations personnelles</div>
+    <div class="app">
+        <div class="sidebar">
+            <div class="sidebar-logo">💰 <span data-translate="appTitle">BudgetCollab</span></div>
+            <div class="sidebar-user">
+                <div class="avatar" id="sidebarAvatar">A</div>
+                <div class="sidebar-user-info">
+                    <div class="sidebar-user-name" id="sidebarName">Admin</div>
+                    <div id="sidebarRoleBadge"></div>
+                </div>
+            </div>
+            <nav class="nav" id="sidebarNav">
+                <div class="nav-item" onclick="navigateTo('dashboard')">
+                    <span class="nav-icon">📊</span><span data-translate="dashboard">Tableau de bord</span>
+                </div>
+                <div class="nav-item" onclick="navigateTo('transactions')">
+                    <span class="nav-icon">💳</span><span data-translate="transactions">Transactions</span>
+                </div>
+                <div class="nav-item" onclick="navigateTo('budgets')">
+                    <span class="nav-icon">📈</span><span data-translate="budgets">Budgets</span>
+                </div>
+                <div class="nav-item" onclick="navigateTo('categories')">
+                    <span class="nav-icon">🏷️</span><span data-translate="categories">Catégories</span>
+                </div>
+                <div class="nav-item active" onclick="navigateTo('profile')">
+                    <span class="nav-icon">👤</span><span data-translate="profile">Profil</span>
+                </div>
+                <div class="nav-item" onclick="navigateTo('shared')">
+                    <span class="nav-icon">🤝</span><span data-translate="shared">Partagés</span>
+                </div>
+            </nav>
+            <div class="sidebar-bottom">
+                <div class="lang-switcher" style="margin-bottom: 12px;">
+                    <button class="lang-btn" id="btnLangFR" onclick="setLanguage('fr')">FR</button>
+                    <button class="lang-btn" id="btnLangEN" onclick="setLanguage('en')">EN</button>
+                </div>
+                <div class="nav-item" onclick="doLogout()">
+                    <span class="nav-icon">🚪</span><span data-translate="logout">Déconnexion</span>
+                </div>
+            </div>
         </div>
-      </div>
 
-      <div class="section">
-        <div class="profile-card">
-          <div class="profile-avatar">
-            <div class="avatar-large" id="profileAvatar">A</div>
-          </div>
-          <div class="profile-info">
-            <h2 id="profileName">Admin</h2>
-            <p id="profileEmail">admin@example.com</p>
-            <div id="profileRoleBadge"></div>
-          </div>
+        <main class="main">
+            <div class="page active" id="profilePage">
+                <div class="page-header">
+                    <div>
+                        <div class="page-title" data-translate="profile">Profil</div>
+                        <div class="page-subtitle">Gérez vos informations personnelles</div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="profile-card">
+                        <div class="profile-avatar">
+                            <div class="avatar-large" id="profileAvatar">A</div>
+                        </div>
+                        <div class="profile-info">
+                            <h2 id="profileName">Admin</h2>
+                            <p id="profileEmail">admin@example.com</p>
+                            <div id="profileRoleBadge"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="section-title">Informations personnelles</div>
+                    <form class="profile-form" id="profileForm">
+                        <div class="form-group">
+                            <label data-translate="name">Nom</label>
+                            <input type="text" id="profileNameInput" placeholder="Votre nom">
+                        </div>
+                        <div class="form-group">
+                            <label data-translate="email">Email</label>
+                            <input type="email" id="profileEmailInput" placeholder="votre.email@example.com">
+                        </div>
+                        <div class="form-group">
+                            <label data-translate="language">Langue</label>
+                            <select id="profileLanguage">
+                                <option value="fr">Français</option>
+                                <option value="en">English</option>
+                            </select>
+                        </div>
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-secondary" onclick="resetProfileForm()"
+                                data-translate="cancel">Annuler</button>
+                            <button type="button" class="btn" onclick="saveProfile()"
+                                data-translate="save">Enregistrer</button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="section">
+                    <div class="section-title">Sécurité</div>
+                    <div class="security-options">
+                        <button class="btn btn-outline" onclick="changePassword()"
+                            data-translate="changePassword">Changer le mot de passe</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Password Modal -->
+    <div class="modal-overlay" id="passwordModal">
+        <div class="modal">
+            <div class="modal-title" data-translate="changePassword">Changer le mot de passe</div>
+            <div class="form-group">
+                <label data-translate="currentPassword">Mot de passe actuel</label>
+                <input type="password" id="currentPassword" placeholder="...">
+            </div>
+            <div class="form-group">
+                <label data-translate="newPassword">Nouveau mot de passe</label>
+                <input type="password" id="newPassword" placeholder="...">
+            </div>
+            <div class="form-group">
+                <label data-translate="confirmPassword">Confirmer le mot de passe</label>
+                <input type="password" id="confirmPassword" placeholder="...">
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-secondary" onclick="closeModal('passwordModal')"
+                    data-translate="cancel">Annuler</button>
+                <button class="btn" onclick="savePassword()" data-translate="save">Enregistrer</button>
+            </div>
         </div>
-      </div>
-
-      <div class="section">
-        <div class="section-title">Informations personnelles</div>
-        <form class="profile-form" id="profileForm">
-          <div class="form-group">
-            <label data-translate="name">Nom</label>
-            <input type="text" id="profileNameInput" placeholder="Votre nom">
-          </div>
-          <div class="form-group">
-            <label data-translate="email">Email</label>
-            <input type="email" id="profileEmailInput" placeholder="votre.email@example.com">
-          </div>
-          <div class="form-group">
-            <label data-translate="language">Langue</label>
-            <select id="profileLanguage">
-              <option value="fr">Français</option>
-              <option value="en">English</option>
-            </select>
-          </div>
-          <div class="form-actions">
-            <button type="button" class="btn btn-secondary" onclick="resetProfileForm()" data-translate="cancel">Annuler</button>
-            <button type="button" class="btn" onclick="saveProfile()" data-translate="save">Enregistrer</button>
-          </div>
-        </form>
-      </div>
-
-      <div class="section">
-        <div class="section-title">Sécurité</div>
-        <div class="security-options">
-          <button class="btn btn-outline" onclick="changePassword()" data-translate="changePassword">Changer le mot de passe</button>
-        </div>
-      </div>
     </div>
-  </main>
-</div>
 
-<!-- Password Modal -->
-<div class="modal-overlay" id="passwordModal">
-  <div class="modal">
-    <div class="modal-title" data-translate="changePassword">Changer le mot de passe</div>
-    <div class="form-group">
-      <label data-translate="currentPassword">Mot de passe actuel</label>
-      <input type="password" id="currentPassword" placeholder="...">
-    </div>
-    <div class="form-group">
-      <label data-translate="newPassword">Nouveau mot de passe</label>
-      <input type="password" id="newPassword" placeholder="...">
-    </div>
-    <div class="form-group">
-      <label data-translate="confirmPassword">Confirmer le mot de passe</label>
-      <input type="password" id="confirmPassword" placeholder="...">
-    </div>
-    <div class="modal-actions">
-      <button class="btn btn-secondary" onclick="closeModal('passwordModal')" data-translate="cancel">Annuler</button>
-      <button class="btn" onclick="savePassword()" data-translate="save">Enregistrer</button>
-    </div>
-  </div>
-</div>
+    <script src="../js/lang/fr.js"></script>
+    <script src="../js/lang/en.js"></script>
+    <script src="../js/languages.js"></script>
+    <script src="../js/db.js"></script>
+    <script src="../js/profile.js"></script>
+    <script>
+        // Navigation function
+        function navigateTo(page) {
+            window.location.href = `${page}.html`;
+        }
 
-<script src="../js/lang/fr.js"></script>
-<script src="../js/lang/en.js"></script>
-<script src="../js/languages.js"></script>
-<script src="../js/db.js"></script>
-<script src="../js/profile.js"></script>
-<script>
-// Navigation function
-function navigateTo(page) {
-  window.location.href = `${page}.html`;
-}
+        // Check authentication
+        if (!getCurrentUser()) {
+            window.location.href = 'login.html';
+        } else {
+            CU = getCurrentUser();
+        }
 
-// Check authentication
-if (!getCurrentUser()) {
-  window.location.href = 'login.html';
-} else {
-  CU = getCurrentUser();
-}
-
-// Initialize on page load
-document.addEventListener('DOMContentLoaded', () => {
-  updateUI();
-  loadProfile();
-});
-</script>
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            updateUI();
+            loadProfile();
+        });
+    </script>
 </body>
+
 </html>
