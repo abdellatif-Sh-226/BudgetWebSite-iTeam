@@ -60,6 +60,8 @@ export function createSidebar() {
             item.addEventListener('click', () => {
                 if (typeof navigateTo === 'function') {
                     navigateTo(target);
+                } else {
+                    window.location.href = target + '.html';
                 }
             });
         }
