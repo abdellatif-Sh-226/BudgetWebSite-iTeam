@@ -1,0 +1,51 @@
+:root {
+  --primary: #f8f9fa;
+  --accent: #007bff;
+  --accent2: #0056b3;
+  --surface: #ffffff;
+  --surface2: #f8f9fa;
+  --text: #212529;
+  --text-muted: #6c757d;
+  --success: #28a745;
+  --warning: #ffc107;
+  --danger: #dc3545;
+  --border: #dee2e6;
+  --white: #ffffff;
+  --radius: 12px;
+  --color-1: #d4edda;
+  --color-2: #f8d7da;
+  --color-3: #f8d7da;
+  --color-4: #fff3cd;
+  --color-5: #f8f9fa;
+  --color-6: #dee2e6;
+  --color-7: #dc3545;
+  --color-8: #007bff;
+  --color-9: #d4edda;
+  --color-10: rgba(0,0,0,0.5);
+  --color-11: #ffc107;
+  --color-12: #dee2e6;
+  --color-13: #d4edda;
+  --color-14: #ffc107;
+  --color-15: #007bff;
+  --color-16: #28a745;
+  --color-17: #f8f9fa;
+  --color-18: #fff3cd;
+  --color-19: rgba(0,123,255,0.1);
+  --color-20: #fff3cd;
+  --color-21: #28a745;
+  --color-22: #f8d7da;
+  --success-dark: #218838;
+  --danger-dark: #c82333;
+  --user-text: #6c757d;
+}
+
+.app-shell {
+  display: flex;
+  min-height: 100vh;
+}
+
+.main-content {
+  margin-left: 240px;
+  flex: 1;
+  padding: 32px;
+}
