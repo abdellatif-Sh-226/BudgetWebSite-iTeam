@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BudgetCollab - Home</title>
+    <link rel="stylesheet" href="../assets/css/layout.css" />
+    <link rel="stylesheet" href="../assets/css/components.css" />
+</head>
+<body>
+    <div id="app" class="app-shell">
+        <aside id="sidebarRoot"></aside>
+        <main class="main-content">
+            <h1>Accueil</h1>
+            <p>Bienvenue sur BudgetCollab.</p>
+        </main>
+    </div>
+
+    <script src="../languages/en.js"></script>
+    <script src="../languages/fr.js"></script>
+    <script type="module">
+        import { createSidebar, setSidebarLanguage } from "../components/sidebar.js";
+
+        setSidebarLanguage('fr');
+
+        const sidebarRoot = document.getElementById('sidebarRoot');
+        if (sidebarRoot) {
+            sidebarRoot.appendChild(createSidebar());
+        }
+    </script>
+</body>
+</html>
