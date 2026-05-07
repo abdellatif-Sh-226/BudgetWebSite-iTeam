@@ -7,12 +7,44 @@
     <link rel="stylesheet" href="../assets/css/layout.css" />
     <link rel="stylesheet" href="../assets/css/sidebar.css" />
     <link rel="stylesheet" href="../assets/css/pages_css/transactions.css" />
+    <link rel="stylesheet" href="../assets/css/tableTransaction.css" />
 </head>
 <body>
     <div id="app" class="app-shell">
         <aside id="sidebarRoot"></aside>
         <main class="main-content">
-            <h1>transactions page h1</h1>
+            <div class="page-header" style="margin-bottom: 20px;">
+                <h1 class="page-title">Transactions</h1>
+            </div>
+
+            <div class="table-container">
+                <div class="filters">
+                    <select id="txFilterType">
+                        <option value="" data-translate="allTypes">Tous les types</option>
+                        <option value="income" data-translate="income">Revenu</option>
+                        <option value="expense" data-translate="expense">Dépense</option>
+                    </select>
+                    <select id="txFilterCat"><option value="" data-translate="allCategories">Toutes catégories</option></select>
+                    <select id="txFilterUser"><option value="" data-translate="allUsers">Tous les utilisateurs</option></select>
+                </div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th data-translate="date">Date</th>
+                            <th data-translate="description">Description</th>
+                            <th data-translate="category">Catégorie</th>
+                            <th data-translate="type">Type</th>
+                            <th data-translate="budget">Budget</th>
+                            <th data-translate="user">Utilisateur</th>
+                            <th data-translate="amount">Montant</th>
+                            <th data-translate="actions">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="txBody">
+                        <!-- tableTransaction.js will populate this area using fake API -->
+                    </tbody>
+                </table>
+            </div>
         </main>
     </div>
 
@@ -28,6 +60,7 @@
             sidebarRoot.appendChild(createSidebar());
         }
     </script>
+    <script type="module" src="../js/tableTransaction.js"></script>
     <script type="module" src="../js/transactions.js"></script>
 </body>
 </html>
