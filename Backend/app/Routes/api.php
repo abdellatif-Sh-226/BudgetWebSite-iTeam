@@ -1,39 +1,20 @@
 <?php
-namespace App\Controllers;
+use App\Controllers\AuthController;
+use App\Middleware\AuthMiddleware;
 
-use App\Services\AuthService;
+$router = new \Bramus\Router\Router();
 
-class AuthController {
+$router->get("/", function () {
+    echo json_encode(["message" => "BudgetCollab API is running", "version" => "1.0"]);
+});
 
-    private AuthService $authService;
+$router->post("/auth/login", function () {
+    (new AuthController())->login();
+});
 
-    public function __construct() {
-        $this->authService = new AuthService();
-    }
+$router->post("/auth/logout", function () {
+    AuthMiddleware::handle();
+    (new AuthController())->logout();
+});
 
-    public function login(): void {
-        $data = json_decode(file_get_contents('php://input'), true);
-
-        $email    = trim($data['email'] ?? '');
-        $password = $data['password'] ?? '';
-
-        if (!$email || !$password) {
-            http_response_code(400);
-            echo json_encode(['error' => 'Email et mot de passe requis']);
-            return;
-        }
-
-        try {
-            $result = $this->authService->login($email, $password);
-            http_response_code(200);
-            echo json_encode($result);
-        } catch (\Exception $e) {
-            http_response_code($e->getCode() ?: 401);
-            echo json_encode(['error' => $e->getMessage()]);
-        }
-    }
-
-    public function logout(): void {
-        echo json_encode(['success' => true, 'message' => 'Déconnecté']);
-    }
-}
+$router->run();
