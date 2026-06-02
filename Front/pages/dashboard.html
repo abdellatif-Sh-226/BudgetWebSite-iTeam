@@ -7,12 +7,65 @@
     <link rel="stylesheet" href="../assets/css/layout.css" />
     <link rel="stylesheet" href="../assets/css/sidebar.css" />
     <link rel="stylesheet" href="../assets/css/pages_css/dashboard.css" />
+    <link rel="stylesheet" href="../assets/css/tableTransaction.css" />
+    <!-- Load Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     <div id="app" class="app-shell">
         <aside id="sidebarRoot"></aside>
         <main class="main-content">
-            <h1>dashboard page h1</h1>
+            <div class="page-header">
+                <div>
+                    <h1 class="page-title" data-translate="dashboard">Tableau de bord</h1>
+                    <p id="dashDate" class="text-muted"></p>
+                </div>
+                <div id="dashRoleInfo"></div>
+            </div>
+
+            <!-- Alerts block for exceeded budgets -->
+            <div id="dashAlerts" class="alerts-container"></div>
+
+            <!-- Summary Cards Grid -->
+            <div id="dashCards" class="stats-grid">
+                <!-- Will be populated dynamically -->
+            </div>
+
+            <!-- Charts Row -->
+            <div class="charts-grid">
+                <div class="chart-card">
+                    <h3 class="chart-title" data-translate="expenseDistribution">Répartition des dépenses</h3>
+                    <div class="chart-wrapper">
+                        <canvas id="pieChart"></canvas>
+                    </div>
+                </div>
+                <div class="chart-card">
+                    <h3 class="chart-title" data-translate="monthlyEvolution">Évolution mensuelle</h3>
+                    <div class="chart-wrapper">
+                        <canvas id="lineChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Transactions Table -->
+            <div class="table-container" style="margin-top: 30px;">
+                <h3 class="table-title" style="margin-bottom: 15px;" data-translate="recentTransactions">Transactions récentes</h3>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th data-translate="date">Date</th>
+                            <th data-translate="description">Description</th>
+                            <th data-translate="category">Catégorie</th>
+                            <!-- Admin column header, hidden by default unless role is admin -->
+                            <th id="userHeader" style="display: none;" data-translate="user">Utilisateur</th>
+                            <th data-translate="amount">Montant</th>
+                        </tr>
+                    </thead>
+                    <tbody id="dashTxBody">
+                        <!-- Will be populated dynamically -->
+                    </tbody>
+                </table>
+            </div>
         </main>
     </div>
 
