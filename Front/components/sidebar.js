@@ -14,66 +14,56 @@ export function setSidebarLanguage(lang = 'en') {
 }
 
 export function createSidebar() {
+    const CU = window.CU || JSON.parse(sessionStorage.getItem('budgetcollab_user')) || { role: 'admin', id: '1', name: 'Admin' };
+    const currentPage = window.location.pathname.split('/').pop().replace('.html', '') || 'dashboard';
+
+    const navItems = [
+        { id: 'dashboard', icon: '📊', label: t('dashboard') || 'Dashboard', page: 'dashboard.html' },
+        { id: 'transactions', icon: '💸', label: t('transactions') || 'Transactions', page: 'transactions.html' },
+        { id: 'budgets', icon: '📋', label: t('budgets') || 'Budgets', page: 'budgets.html' },
+        { id: 'categories', icon: '🏷️', label: t('categories') || 'Catégories', page: 'categories.html' },
+        { id: 'shared', icon: '👥', label: t('shared') || 'Partagés', page: 'shared.html' },
+        { id: 'profile', icon: '👤', label: t('profile') || 'Profil', page: 'profile.html' }
+    ];
+
     const sidebar = document.createElement('div');
     sidebar.className = 'sidebar';
     sidebar.innerHTML = `
-        <div class="sidebar-logo">💰 <span>${t('appTitle')}</span></div>
+        <div class="sidebar-logo">💰 <span>BudgetCollab</span></div>
         <div class="sidebar-user">
-            <div class="avatar" id="sidebarAvatar">A</div>
+            <div class="avatar" id="sidebarAvatar">${CU.name ? CU.name.charAt(0).toUpperCase() : 'A'}</div>
             <div class="sidebar-user-info">
-                <div class="sidebar-user-name" id="sidebarName">Admin</div>
-                <div class="sidebar-role-badge" id="sidebarRoleBadge"></div>
+                <div class="sidebar-user-name" id="sidebarName">${CU.name || 'Admin'}</div>
+                <div class="sidebar-role-badge" id="sidebarRoleBadge">${CU.role === 'admin' ? '<span class="role-badge-admin">👑 Admin</span>' : '<span class="role-badge-user">👤 Utilisateur</span>'}</div>
             </div>
         </div>
         <nav class="nav" id="sidebarNav">
-            <div class="nav-item" data-target="dashboard">
-                <span class="nav-icon">📊</span><span>${t('dashboard')}</span>
-            </div>
-            <div class="nav-item" data-target="transactions">
-                <span class="nav-icon">💳</span><span>${t('transactions')}</span>
-            </div>
-            <div class="nav-item active" data-target="budgets">
-                <span class="nav-icon">📈</span><span>${t('budgets')}</span>
-            </div>
-            <div class="nav-item" data-target="categories">
-                <span class="nav-icon">🏷️</span><span>${t('categories')}</span>
-            </div>
-            <div class="nav-item" data-target="profile">
-                <span class="nav-icon">👤</span><span>${t('profile')}</span>
-            </div>
-            <div class="nav-item" data-target="shared">
-                <span class="nav-icon">🤝</span><span>${t('shared')}</span>
-            </div>
+            ${navItems.map(n => `
+                <div class="nav-item ${currentPage === n.id ? 'active' : ''}" data-page="${n.page}">
+                    <span class="nav-icon">${n.icon}</span><span>${n.label}</span>
+                </div>
+            `).join('')}
         </nav>
         <div class="sidebar-bottom">
-            <div class="nav-item logout-item" data-action="logout">
-                <span class="nav-icon">🚪</span><span>${t('logout')}</span>
+            <div class="nav-item" id="logoutBtn">
+                <span class="nav-icon">🚪</span><span>${t('logout') || 'Déconnexion'}</span>
             </div>
         </div>
     `;
 
-    sidebar.querySelectorAll('.nav-item').forEach((item) => {
-        const target = item.dataset.target;
-        const action = item.dataset.action;
-
-        if (target) {
-            item.addEventListener('click', () => {
-                if (typeof navigateTo === 'function') {
-                    navigateTo(target);
-                } else {
-                    window.location.href = target + '.html';
-                }
-            });
-        }
-
-        if (action === 'logout') {
-            item.addEventListener('click', () => {
-                if (typeof doLogout === 'function') {
-                    doLogout();
-                }
-            });
-        }
+    sidebar.querySelectorAll('.nav-item[data-page]').forEach(item => {
+        item.addEventListener('click', () => {
+            window.location.href = item.dataset.page;
+        });
     });
+
+    const logoutBtn = sidebar.querySelector('#logoutBtn');
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', () => {
+            sessionStorage.removeItem('budgetcollab_user');
+            window.location.href = 'home.html';
+        });
+    }
 
     return sidebar;
 }

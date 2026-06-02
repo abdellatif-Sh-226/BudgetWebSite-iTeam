@@ -3,31 +3,39 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>BudgetCollab - Profile</title>
+    <title>BudgetCollab - Profil</title>
     <link rel="stylesheet" href="../assets/css/layout.css" />
     <link rel="stylesheet" href="../assets/css/sidebar.css" />
-    <link rel="stylesheet" href="../assets/css/pages_css/profile.css" />
 </head>
 <body>
-    <div id="app" class="app-shell">
-        <aside id="sidebarRoot"></aside>
-        <main class="main-content">
-            <h1>profile page h1</h1>
-        </main>
-    </div>
+<div id="app" class="app-shell">
+    <aside id="sidebarRoot"></aside>
+    <main class="main-content">
+        <div class="page-header">
+            <div>
+                <div class="page-title">Mon profil</div>
+                <div class="page-subtitle">Gérez vos informations personnelles</div>
+            </div>
+        </div>
+        <div class="section" style="max-width:500px">
+            <div class="form-group"><label>Nom complet</label><input type="text" id="profName"></div>
+            <div class="form-group"><label>Email</label><input type="email" id="profEmail"></div>
+            <div style="margin-top:24px;display:flex;gap:10px">
+                <button class="btn" onclick="saveProfile()">Enregistrer</button>
+            </div>
+            <div id="profMsg" style="font-size:13px;margin-top:12px;min-height:18px"></div>
+        </div>
+    </main>
+</div>
 
-    <script src="../languages/en.js"></script>
-    <script src="../languages/fr.js"></script>
-    <script type="module">
-        import { createSidebar, setSidebarLanguage } from "../components/sidebar.js";
-
-        setSidebarLanguage('fr');
-
-        const sidebarRoot = document.getElementById('sidebarRoot');
-        if (sidebarRoot) {
-            sidebarRoot.appendChild(createSidebar());
-        }
-    </script>
-    <script type="module" src="../js/profile.js"></script>
+<script src="../languages/en.js"></script>
+<script src="../languages/fr.js"></script>
+<script type="module">
+    import { createSidebar, setSidebarLanguage } from "../components/sidebar.js";
+    setSidebarLanguage('fr');
+    const sidebarRoot = document.getElementById('sidebarRoot');
+    if (sidebarRoot) sidebarRoot.appendChild(createSidebar());
+</script>
+<script type="module" src="../js/profile.js"></script>
 </body>
 </html>

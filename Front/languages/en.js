@@ -1,4 +1,4 @@
-const langEN = {
+window.langEN = {
   // Common
   appTitle: "BudgetCollab",
   save: "Save",

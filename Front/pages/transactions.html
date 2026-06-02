@@ -6,61 +6,76 @@
     <title>BudgetCollab - Transactions</title>
     <link rel="stylesheet" href="../assets/css/layout.css" />
     <link rel="stylesheet" href="../assets/css/sidebar.css" />
-    <link rel="stylesheet" href="../assets/css/pages_css/transactions.css" />
-    <link rel="stylesheet" href="../assets/css/tableTransaction.css" />
 </head>
 <body>
-    <div id="app" class="app-shell">
-        <aside id="sidebarRoot"></aside>
-        <main class="main-content">
-            <div class="page-header" style="margin-bottom: 20px;">
-                <h1 class="page-title">Transactions</h1>
+<div id="app" class="app-shell">
+    <aside id="sidebarRoot"></aside>
+    <main class="main-content">
+        <div class="page-header">
+            <div>
+                <div class="page-title" id="txPageTitle">Mes transactions</div>
+                <div class="page-subtitle" id="txPageSubtitle">Vous ne voyez que vos propres transactions</div>
             </div>
+            <button class="btn btn-sm" onclick="openTxModal()">+ Ajouter</button>
+        </div>
+        <div class="section">
+            <div style="display:flex;gap:12px;margin-bottom:16px;flex-wrap:wrap">
+                <select id="txFilterType" onchange="renderTransactions()" class="filter-select">
+                    <option value="">Tous les types</option>
+                    <option value="income">Revenus</option>
+                    <option value="expense">Dépenses</option>
+                </select>
+                <select id="txFilterCat" onchange="renderTransactions()" class="filter-select">
+                    <option value="">Toutes catégories</option>
+                </select>
+                <select id="txFilterUser" onchange="renderTransactions()" class="filter-select" style="display:none">
+                    <option value="">Tous les utilisateurs</option>
+                </select>
+            </div>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Description</th>
+                        <th>Catégorie</th>
+                        <th>Type</th>
+                        <th>Destination</th>
+                        <th id="txUserHeader" style="display:none">Par</th>
+                        <th>Montant</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="txBody"></tbody>
+            </table>
+        </div>
+    </main>
+</div>
 
-            <div class="table-container">
-                <div class="filters">
-                    <select id="txFilterType">
-                        <option value="" data-translate="allTypes">Tous les types</option>
-                        <option value="income" data-translate="income">Revenu</option>
-                        <option value="expense" data-translate="expense">Dépense</option>
-                    </select>
-                    <select id="txFilterCat"><option value="" data-translate="allCategories">Toutes catégories</option></select>
-                    <select id="txFilterUser"><option value="" data-translate="allUsers">Tous les utilisateurs</option></select>
-                </div>
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th data-translate="date">Date</th>
-                            <th data-translate="description">Description</th>
-                            <th data-translate="category">Catégorie</th>
-                            <th data-translate="type">Type</th>
-                            <th data-translate="budget">Budget</th>
-                            <th data-translate="user">Utilisateur</th>
-                            <th data-translate="amount">Montant</th>
-                            <th data-translate="actions">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="txBody">
-                        <!-- tableTransaction.js will populate this area using fake API -->
-                    </tbody>
-                </table>
-            </div>
-        </main>
+<div class="modal-overlay" id="txModal">
+  <div class="modal">
+    <div class="modal-title" id="txModalTitle">Ajouter une transaction</div>
+    <div class="form-group"><label>Type</label><select id="txType"><option value="income">Revenu</option><option value="expense">Dépense</option></select></div>
+    <div class="form-group"><label>Description</label><input type="text" id="txDesc" placeholder="Ex: Loyer, Salaire..."></div>
+    <div class="form-group"><label>Montant (TND)</label><input type="number" id="txAmount" placeholder="0.00" min="0" step="0.01"></div>
+    <div class="form-group"><label>Date</label><input type="date" id="txDate"></div>
+    <div class="form-group"><label>Destination</label><select id="txDest" onchange="syncTxTypeToDestination()"><option value="wallet">📱 Mon portefeuille</option></select></div>
+    <div class="form-group"><label>Catégorie</label><select id="txCat"></select></div>
+    <div class="form-group"><label>Notes (optionnel)</label><textarea id="txNotes" rows="2" placeholder="..."></textarea></div>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" onclick="closeModal('txModal')">Annuler</button>
+      <button class="btn" onclick="saveTx()">Enregistrer</button>
     </div>
+  </div>
+</div>
 
-    <script src="../languages/en.js"></script>
-    <script src="../languages/fr.js"></script>
-    <script type="module">
-        import { createSidebar, setSidebarLanguage } from "../components/sidebar.js";
-
-        setSidebarLanguage('fr');
-
-        const sidebarRoot = document.getElementById('sidebarRoot');
-        if (sidebarRoot) {
-            sidebarRoot.appendChild(createSidebar());
-        }
-    </script>
-    <script type="module" src="../js/tableTransaction.js"></script>
-    <script type="module" src="../js/transactions.js"></script>
+<script src="../languages/en.js"></script>
+<script src="../languages/fr.js"></script>
+<script type="module">
+    import { createSidebar, setSidebarLanguage } from "../components/sidebar.js";
+    setSidebarLanguage('fr');
+    const sidebarRoot = document.getElementById('sidebarRoot');
+    if (sidebarRoot) sidebarRoot.appendChild(createSidebar());
+</script>
+<script type="module" src="../js/transactions.js"></script>
 </body>
 </html>
