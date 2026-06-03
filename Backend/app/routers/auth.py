@@ -27,16 +27,17 @@ def get_me(current_user: User = Depends(get_current_user)):
     return UserResponse.model_validate(current_user)
 
 
-@router.post("/register", response_model=UserResponse)
+@router.post("/register", response_model=LoginResponse)
 def register(
     data: UserCreate,
     background_tasks: BackgroundTasks,
     db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user),
 ):
-    if current_user.role != "admin":
-        from fastapi import HTTPException, status
-        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Admin privileges required")
+    data.role = "user"
     user_service = UserService(db)
     user = user_service.create(data, background_tasks)
-    return UserResponse.model_validate(user)
+    token = AuthService.create_token(user.id, user.role)
+    return LoginResponse(
+        access_token=token,
+        user=UserResponse.model_validate(user),
+    )

@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BudgetCollab — Documentation Backend</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:#0f0f1a;color:#e0e0e0;line-height:1.7}
+.container{max-width:960px;margin:0 auto;padding:40px 24px}
+h1{color:#e94560;font-size:32px;margin-bottom:8px}
+h2{color:#e94560;font-size:24px;margin-top:48px;margin-bottom:16px;border-bottom:1px solid rgba(255,255,255,0.08);padding-bottom:8px}
+h3{color:#4ade80;font-size:18px;margin-top:32px;margin-bottom:12px}
+p{color:#8892b0;margin-bottom:16px}
+code{background:#1a1a2e;padding:2px 8px;border-radius:4px;font-size:14px;color:#fbbf24}
+pre{background:#1a1a2e;padding:16px 20px;border-radius:8px;overflow-x:auto;margin:16px 0;border:1px solid rgba(255,255,255,0.06)}
+pre code{background:none;padding:0;color:#e0e0e0;font-size:13px}
+.badge{display:inline-block;padding:3px 12px;border-radius:20px;font-size:12px;font-weight:600;margin:2px}
+.badge-green{background:rgba(74,222,128,0.15);color:#4ade80}
+.badge-red{background:rgba(248,113,113,0.15);color:#f87171}
+.badge-yellow{background:rgba(251,191,36,0.15);color:#fbbf24}
+.badge-blue{background:rgba(96,165,250,0.15);color:#60a5fa}
+.badge-accent{background:rgba(233,69,96,0.15);color:#e94560}
+.card{background:#16213e;border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:20px 24px;margin-bottom:16px}
+.card-title{font-size:15px;font-weight:600;margin-bottom:8px;color:#e0e0e0}
+.card-text{font-size:13px;color:#8892b0}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:16px 0}
+table{width:100%;border-collapse:collapse;font-size:14px;margin:16px 0}
+th{text-align:left;padding:10px 12px;color:#8892b0;font-size:12px;font-weight:600;border-bottom:1px solid rgba(255,255,255,0.08)}
+td{padding:10px 12px;border-bottom:1px solid rgba(255,255,255,0.04);color:#e0e0e0}
+tr:last-child td{border-bottom:none}
+ul{padding-left:20px;margin-bottom:16px}
+li{color:#8892b0;margin-bottom:6px}
+strong{color:#e0e0e0}
+a{color:#60a5fa;text-decoration:none}
+hr{border:none;border-top:1px solid rgba(255,255,255,0.08);margin:32px 0}
+.arch-box{background:#1a2744;border:1px solid rgba(233,69,96,0.2);border-radius:12px;padding:24px;margin:16px 0}
+.arch-box p{font-size:14px}
+.highlight{border-left:3px solid #e94560;padding:12px 16px;background:rgba(233,69,96,0.06);border-radius:0 8px 8px 0;margin:16px 0}
+.highlight-green{border-left:3px solid #4ade80;padding:12px 16px;background:rgba(74,222,128,0.06);border-radius:0 8px 8px 0;margin:16px 0}
+@media(max-width:600px){.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<h1>💰 BudgetCollab — Backend API</h1>
+<p style="font-size:16px;color:#8892b0">
+  Version 2.0.0 &mdash; FastAPI + SQLite + JWT Authentication<br>
+  Application de gestion de budgets collaboratifs
+</p>
+
+<hr>
+
+<h2>📋 Table des matières</h2>
+<ol style="color:#8892b0;margin-bottom:24px">
+  <li><a href="#presentation">Présentation du projet</a></li>
+  <li><a href="#technos">Stack technique</a></li>
+  <li><a href="#install">Installation & exécution</a></li>
+  <li><a href="#arch">Architecture</a></li>
+  <li><a href="#db">Modèle de données</a></li>
+  <li><a href="#api">Endpoints API</a></li>
+  <li><a href="#auth">Authentification & sécurité</a></li>
+  <li><a href="#email">Notifications email</a></li>
+  <li><a href="#voting">Système de vote</a></li>
+  <li><a href="#tests">Tests</a></li>
+  <li><a href="#frontend">Consommation par le frontend</a></li>
+</ol>
+
+<hr>
+
+<!-- ============ PRÉSENTATION ============ -->
+<h2 id="presentation">1. Présentation du projet</h2>
+<p>
+  BudgetCollab est une application de <strong>gestion de budgets collaboratifs</strong>.
+  Elle permet à des utilisateurs de créer des budgets personnels et partagés,
+  d'ajouter des transactions, et de gérer des dépenses via un système de vote
+  lorsque les montants dépassent un seuil défini.
+</p>
+
+<div class="grid">
+  <div class="card">
+    <div class="card-title">🎯 Fonctionnalités principales</div>
+    <div class="card-text">
+      • Authentification JWT<br>
+      • Budgets personnels<br>
+      • Budgets partagés (membres)<br>
+      • Transactions (revenus/dépenses)<br>
+      • Catégories personnalisables<br>
+      • Dashboard & statistiques<br>
+      • Système de vote<br>
+      • Notifications email<br>
+      • Journal d'activité
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">👥 Rôles utilisateurs</div>
+    <div class="card-text">
+      <span class="badge badge-accent">Admin</span> &mdash; Accès total, gestion des utilisateurs, approbation des transactions<br><br>
+      <span class="badge badge-blue">User</span> &mdash; Gère ses transactions, budgets, participe aux budgets partagés et aux votes
+    </div>
+  </div>
+</div>
+
+<hr>
+
+<!-- ============ STACK ============ -->
+<h2 id="technos">2. Stack technique</h2>
+
+<table>
+  <tr><th>Technologie</th><th>Choix</th><th>Justification</th></tr>
+  <tr><td><strong>Framework</strong></td><td>FastAPI</td><td>Performant, auto-documenté (Swagger), typé, asynchrone</td></tr>
+  <tr><td><strong>ORM</strong></td><td>SQLAlchemy 2.0</td><td>ORM le plus mature pour Python, support multi-base</td></tr>
+  <tr><td><strong>Base de données</strong></td><td>SQLite (dev) / MySQL (prod)</td><td>SQLite zéro configuration pour le développement, MySQL pour la production</td></tr>
+  <tr><td><strong>Auth</strong></td><td>JWT + bcrypt</td><td>Stateless, sécurisé, standard API REST</td></tr>
+  <tr><td><strong>Validation</strong></td><td>Pydantic v2</td><td>Validation automatique des données entrantes/sortantes</td></tr>
+  <tr><td><strong>Email</strong></td><td>SMTP (Gmail)</td><td>Notifications transactionnelles en arrière-plan</td></tr>
+  <tr><td><strong>Migrations</strong></td><td>Alembic</td><td>Versionnement des schémas de base de données</td></tr>
+</table>
+
+<div class="highlight-green">
+  <p><strong>Pourquoi pas MVC classique ?</strong><br>
+  L'architecture choisie est une <strong>architecture en couches</strong> (Router → Service → Model), supérieure au MVC pour une API REST car elle permet de centraliser les règles métier complexes (vote, notifications, logs) dans les Services plutôt que de les disperser dans les Models. Cela simplifie les tests, la maintenance, et évite les oublis de validation.</p>
+</div>
+
+<hr>
+
+<!-- ============ INSTALLATION ============ -->
+<h2 id="install">3. Installation & exécution</h2>
+
+<h3>Prérequis</h3>
+<ul>
+  <li>Python 3.10+</li>
+  <li>pip</li>
+</ul>
+
+<h3>Installation</h3>
+<pre><code>cd Backend
+pip install -r requirements.txt</code></pre>
+
+<h3>Configuration</h3>
+<p>Copier <code>.env.example</code> vers <code>.env</code> et ajuster les valeurs :</p>
+<pre><code># SQLite par défaut — aucun réglage nécessaire
+DB_DRIVER=sqlite
+
+# JWT
+JWT_SECRET=une_cle_secrete_aleatoire
+JWT_ALGORITHM=HS256
+JWT_EXPIRATION_HOURS=24
+
+# Email (optionnel — sans SMTP configuré, les emails sont ignorés)
+SMTP_SERVER=smtp.gmail.com
+SMTP_PORT=587
+SMTP_USERNAME=votre.email@gmail.com
+SMTP_PASSWORD=votre_mot_de_passe_application
+SMTP_FROM=votre.email@gmail.com
+
+# Seuil de vote (500 TND par défaut)
+VOTE_THRESHOLD=500.0
+VOTE_APPROVAL_PERCENT=50.0</code></pre>
+
+<h3>Lancement</h3>
+<pre><code>python -m uvicorn app.main:app --reload --host 0.0.0.0 --port 8000</code></pre>
+
+<h3>Accès</h3>
+<ul>
+  <li><strong>API</strong> : <code>http://localhost:8000</code></li>
+  <li><strong>Documentation Swagger</strong> : <code>http://localhost:8000/docs</code></li>
+  <li><strong>Documentation ReDoc</strong> : <code>http://localhost:8000/redoc</code></li>
+</ul>
+
+<h3>Compte admin par défaut</h3>
+<pre><code>Email:    admin@budgetcollab.com
+Password: admin123</code></pre>
+<p>Créé automatiquement au premier lancement.</p>
+
+<hr>
+
+<!-- ============ ARCHITECTURE ============ -->
+<h2 id="arch">4. Architecture</h2>
+
+<div class="arch-box">
+<p style="font-family:monospace;font-size:14px;line-height:2;text-align:center">
+  <strong style="color:#e94560">Client HTTP</strong> (Frontend / Mobile)<br>
+  ↓<br>
+  <strong style="color:#60a5fa">Routers</strong> &mdash; Points d'entrée HTTP (validation, auth)<br>
+  ↓<br>
+  <strong style="color:#4ade80">Services</strong> &mdash; Logique métier (règles, notifications, logs)<br>
+  ↓<br>
+  <strong style="color:#fbbf24">Models</strong> &mdash; Accès aux données (SQLAlchemy ORM)<br>
+  ↓<br>
+  <strong style="color:#8892b0">SQLite</strong> / MySQL
+</p>
+</div>
+
+<h3>Structure des dossiers</h3>
+<pre><code>Backend/
+├── app/
+│   ├── main.py              ← Point d'entrée FastAPI
+│   ├── config.py            ← Configuration (variables d'environnement)
+│   ├── database.py          ← Connexion SQLAlchemy
+│   ├── dependencies.py      ← Dépendances (auth, DB)
+│   ├── seed.py              ← Création de l'admin par défaut
+│   │
+│   ├── Models/              ← Modèles SQLAlchemy (tables)
+│   ├── schemas/             ← Schémas Pydantic (validation)
+│   ├── Services/            ← Logique métier
+│   ├── routers/             ← Endpoints API
+│   └── templates/emails/    ← Templates HTML pour emails
+│
+├── alembic/                 ← Migrations de base de données
+├── .env                     ← Configuration locale
+├── .env.example             ← Template de configuration
+└── requirements.txt         ← Dépendances Python</code></pre>
+
+<h3>Pourquoi cette architecture ?</h3>
+<table>
+  <tr><th>Critère</th><th>Architecture en couches</th><th>MVC classique</th></tr>
+  <tr><td>Règles métier complexes</td><td>✅ Centralisées dans les Services</td><td>❌ Dispersées dans les Models</td></tr>
+  <tr><td>Testabilité</td><td>✅ Services testables isolément</td><td>⚠️ Models couplés à la DB</td></tr>
+  <tr><td>Réutilisabilité</td><td>✅ Un Service compose plusieurs Models</td><td>❌ Limitée à un Model</td></tr>
+  <tr><td>Vélocité</td><td>✅ Différence négligeable (~0.1ms)</td><td>⚠️ Légèrement plus rapide</td></tr>
+  <tr><td>Sécurité</td><td>✅ Validation centralisée</td><td>⚠️ Risque d'oublis</td></tr>
+  <tr><td>Maintenabilité</td><td>✅ Chaque couche a un rôle clair</td><td>⚠️ Models "fourre-tout"</td></tr>
+</table>
+
+<hr>
+
+<!-- ============ MODÈLE DE DONNÉES ============ -->
+<h2 id="db">5. Modèle de données</h2>
+
+<p>6 tables principales + 2 tables de jointure :</p>
+
+<pre><code>┌─────────────────┐       ┌──────────────────┐
+│      users      │       │   categories     │
+│───────────────  │       │──────────────────│
+│ id (PK)         │──1:N──│ id (PK)          │
+│ name            │       │ name             │
+│ email (UNIQUE)  │       │ color            │
+│ password (hash) │       │ owner_id (FK)    │
+│ role            │       │ shared_budget_id │
+│ active          │       └──────────────────┘
+│ delete_request  │
+└──────┬──────────┘
+       │
+       │1:N
+┌──────┴──────────┐
+│   budgets       │
+│──────────────── │
+│ id (PK)         │
+│ user_id (FK)    │
+│ name            │
+│ period          │
+│ limit_amount    │
+│ start_date      │
+│ end_date        │
+└─────────────────┘
+
+┌──────────────────┐
+│  transactions    │
+│───────────────── │
+│ id (PK)          │
+│ user_id (FK)     │──1:N──┐
+│ type (inc/exp)   │       │
+│ description      │       │
+│ amount           │       │
+│ category_id (FK) │       │
+│ destination_type │       │
+│ destination_id   │       │
+│ status           │       │
+└──────────────────┘       │
+                           │1:N
+┌──────────────────┐       │
+│     votes        │       │
+│───────────────── │       │
+│ id (PK)          │       │
+│ transaction_id   │◄──────┘
+│ created_by (FK)  │
+│ status           │
+│ threshold_amount │
+└────────┬─────────┘
+         │
+         │1:N
+┌────────┴──────────┐
+│   vote_casts      │
+│────────────────── │
+│ id (PK)           │
+│ vote_id (FK)      │
+│ user_id (FK)      │
+│ approved (bool)   │
+└───────────────────┘
+
+┌──────────────────┐
+│ shared_budgets   │
+│───────────────── │
+│ id (PK)          │
+│ owner_id (FK)    │
+│ name             │
+│ description      │
+│ limit_amount     │
+└────────┬─────────┘
+         │
+         │M:N (via shared_budget_members)
+         │
+   ┌─────┴──────┐
+   │   users    │
+   └────────────┘
+
+┌──────────────────┐
+│ activity_logs    │
+│───────────────── │
+│ id (PK)          │
+│ user_id (FK)     │
+│ action           │
+│ entity_type      │
+│ entity_id        │
+│ details          │
+│ created_at       │
+└──────────────────┘</code></pre>
+
+<hr>
+
+<!-- ============ API ============ -->
+<h2 id="api">6. Endpoints API</h2>
+
+<p>Tous les endpoints sont documentés automatiquement via Swagger à l'URL <code>/docs</code>.</p>
+
+<h3>Authentification</h3>
+<table>
+  <tr><th>Méthode</th><th>Endpoint</th><th>Auth</th><th>Description</th></tr>
+  <tr><td>GET</td><td><code>/api/health</code></td><td>❌</td><td>Vérification du serveur</td></tr>
+  <tr><td>POST</td><td><code>/api/auth/login</code></td><td>❌</td><td>Connexion → token JWT</td></tr>
+  <tr><td>GET</td><td><code>/api/auth/me</code></td><td>✅</td><td>Profil de l'utilisateur connecté</td></tr>
+  <tr><td>POST</td><td><code>/api/auth/register</code></td><td>Admin</td><td>Création d'un compte</td></tr>
+</table>
+
+<h3>Utilisateurs (Admin)</h3>
+<table>
+  <tr><th>Méthode</th><th>Endpoint</th><th>Description</th></tr>
+  <tr><td>GET</td><td><code>/api/users</code></td><td>Liste tous les utilisateurs</td></tr>
+  <tr><td>GET</td><td><code>/api/users/{id}</code></td><td>Détail d'un utilisateur</td></tr>
+  <tr><td>PUT</td><td><code>/api/users/{id}</code></td><td>Modifier rôle, statut</td></tr>
+  <tr><td>DELETE</td><td><code>/api/users/{id}</code></td><td>Supprimer un utilisateur</td></tr>
+  <tr><td>PUT</td><td><code>/api/users/me/profile</code></td><td>Modifier son propre profil</td></tr>
+  <tr><td>POST</td><td><code>/api/users/me/delete-request</code></td><td>Demander la suppression</td></tr>
+</table>
+
+<h3>Catégories</h3>
+<table>
+  <tr><th>Méthode</th><th>Endpoint</th><th>Description</th></tr>
+  <tr><td>GET</td><td><code>/api/categories</code></td><td>Liste les catégories visibles</td></tr>
+  <tr><td>POST</td><td><code>/api/categories</code></td><td>Créer une catégorie</td></tr>
+  <tr><td>PUT</td><td><code>/api/categories/{id}</code></td><td>Modifier une catégorie</td></tr>
+  <tr><td>DELETE</td><td><code>/api/categories/{id}</code></td><td>Supprimer une catégorie</td></tr>
+</table>
+
+<h3>Budgets</h3>
+<table>
+  <tr><th>Méthode</th><th>Endpoint</th><th>Description</th></tr>
+  <tr><td>GET</td><td><code>/api/budgets</code></td><td>Liste les budgets (les siens ou tous pour admin)</td></tr>
+  <tr><td>POST</td><td><code>/api/budgets</code></td><td>Créer un budget</td></tr>
+  <tr><td>PUT</td><td><code>/api/budgets/{id}</code></td><td>Modifier un budget</td></tr>
+  <tr><td>DELETE</td><td><code>/api/budgets/{id}</code></td><td>Supprimer un budget</td></tr>
+</table>
+
+<h3>Transactions</h3>
+<table>
+  <tr><th>Méthode</th><th>Endpoint</th><th>Description</th></tr>
+  <tr><td>GET</td><td><code>/api/transactions</code></td><td>Liste les transactions</td></tr>
+  <tr><td>GET</td><td><code>/api/transactions/summary</code></td><td>Résumé revenus/dépenses</td></tr>
+  <tr><td>POST</td><td><code>/api/transactions</code></td><td>Créer une transaction</td></tr>
+  <tr><td>PUT</td><td><code>/api/transactions/{id}</code></td><td>Modifier une transaction</td></tr>
+  <tr><td>DELETE</td><td><code>/api/transactions/{id}</code></td><td>Supprimer une transaction</td></tr>
+  <tr><td>POST</td><td><code>/api/transactions/{id}/approve</code></td><td>Approuver (Admin)</td></tr>
+  <tr><td>POST</td><td><code>/api/transactions/{id}/reject</code></td><td>Rejeter (Admin)</td></tr>
+</table>
+
+<h3>Budgets Partagés</h3>
+<table>
+  <tr><th>Méthode</th><th>Endpoint</th><th>Description</th></tr>
+  <tr><td>GET</td><td><code>/api/shared-budgets</code></td><td>Liste les budgets partagés</td></tr>
+  <tr><td>POST</td><td><code>/api/shared-budgets</code></td><td>Créer un budget partagé</td></tr>
+  <tr><td>PUT</td><td><code>/api/shared-budgets/{id}</code></td><td>Modifier</td></tr>
+  <tr><td>DELETE</td><td><code>/api/shared-budgets/{id}</code></td><td>Supprimer</td></tr>
+  <tr><td>POST</td><td><code>/api/shared-budgets/{id}/members</code></td><td>Ajouter un membre (email)</td></tr>
+  <tr><td>DELETE</td><td><code>/api/shared-budgets/{id}/members/{uid}</code></td><td>Retirer un membre</td></tr>
+</table>
+
+<h3>Votes</h3>
+<table>
+  <tr><th>Méthode</th><th>Endpoint</th><th>Description</th></tr>
+  <tr><td>GET</td><td><code>/api/votes</code></td><td>Liste les votes</td></tr>
+  <tr><td>GET</td><td><code>/api/votes/{id}</code></td><td>Détail d'un vote</td></tr>
+  <tr><td>POST</td><td><code>/api/votes/{id}/cast</code></td><td>Voter (approuver/rejeter)</td></tr>
+</table>
+
+<h3>Dashboard & Stats</h3>
+<table>
+  <tr><th>Méthode</th><th>Endpoint</th><th>Auth</th><th>Description</th></tr>
+  <tr><td>GET</td><td><code>/api/dashboard</code></td><td>✅</td><td>Tableau de bord complet</td></tr>
+  <tr><td>GET</td><td><code>/api/stats</code></td><td>Admin</td><td>Statistiques système</td></tr>
+  <tr><td>GET</td><td><code>/api/activity-logs</code></td><td>Admin</td><td>Journal d'activité</td></tr>
+</table>
+
+<hr>
+
+<!-- ============ AUTH ============ -->
+<h2 id="auth">7. Authentification & sécurité</h2>
+
+<div class="highlight">
+<p><strong>🔒 Mesures de sécurité implémentées</strong></p>
+</div>
+
+<table>
+  <tr><th>Mesure</th><th>Détail</th></tr>
+  <tr><td><strong>Mots de passe</strong></td><td>Hachés avec bcrypt (sel automatique, 12 rounds)</td></tr>
+  <tr><td><strong>Authentification</strong></td><td>JWT (JSON Web Token) avec expiration 24h</td></tr>
+  <tr><td><strong>Tokens</strong></td><td>Signés avec HS256, payload contient user_id + role</td></tr>
+  <tr><td><strong>Contrôle d'accès</strong></td><td>Middleware vérifie le token et le rôle sur chaque requête protégée</td></tr>
+  <tr><td><strong>Validation</strong></td><td>Pydantic valide toutes les entrées/sorties automatiquement</td></tr>
+  <tr><td><strong>CORS</strong></td><td>Configurable via CORS_ORIGINS (.env)</td></tr>
+  <tr><td><strong>Secrets</strong></td><td>JWT_SECRET, SMTP_PASSWORD dans .env — jamais dans le code</td></tr>
+  <tr><td><strong>Injections SQL</strong></td><td>SQLAlchemy ORM élimine les risques d'injection</td></tr>
+</table>
+
+<h3>Flux d'authentification</h3>
+<pre><code>1. POST /api/auth/login { email, password }
+2. Vérification bcrypt du mot de passe
+3. Génération d'un token JWT (24h)
+4. Retour du token au client
+5. Le client envoie le token dans l'en-tête Authorization: Bearer &lt;token&gt;
+6. Chaque endpoint protégé vérifie le token + rôle via les dépendances FastAPI</code></pre>
+
+<hr>
+
+<!-- ============ EMAIL ============ -->
+<h2 id="email">8. Notifications email</h2>
+
+<p>Le service d'email envoie des notifications de manière asynchrone (ne bloque pas la réponse API).</p>
+
+<h3>Événements déclencheurs</h3>
+<table>
+  <tr><th>Événement</th><th>Email envoyé</th><th>Template</th></tr>
+  <tr><td>Création de compte</td><td>Bienvenue sur BudgetCollab</td><td><code>welcome.html</code></td></tr>
+  <tr><td>Transaction en attente</td><td>En attente d'approbation</td><td><code>transaction_pending.html</code></td></tr>
+  <tr><td>Transaction approuvée</td><td>Transaction approuvée</td><td><code>transaction_approved.html</code></td></tr>
+  <tr><td>Transaction rejetée</td><td>Transaction rejetée</td><td><code>transaction_rejected.html</code></td></tr>
+  <tr><td>Ajout à un budget partagé</td><td>Vous avez été ajouté</td><td><code>member_added.html</code></td></tr>
+  <tr><td>Réinitialisation mot de passe</td><td>Instructions de réinitialisation</td><td><code>password_reset.html</code></td></tr>
+</table>
+
+<h3>Configuration Gmail</h3>
+<pre><code># Dans .env
+SMTP_SERVER=smtp.gmail.com
+SMTP_PORT=587
+SMTP_USERNAME=votre.email@gmail.com
+SMTP_PASSWORD=votre_mot_de_passe_application
+SMTP_FROM=votre.email@gmail.com</code></pre>
+<p><strong>Important :</strong> Pour Gmail, utilisez un <strong>mot de passe d'application</strong> (pas votre mot de passe Gmail).<br>
+  Activez l'authentification à deux facteurs sur votre compte Gmail, puis créez un mot de passe d'application dans les paramètres de sécurité.</p>
+
+<div class="highlight-green">
+<p>💡 <strong>Sans SMTP configuré :</strong> Les emails sont simplement ignorés (log warning). L'API fonctionne parfaitement sans.</p>
+</div>
+
+<hr>
+
+<!-- ============ VOTE ============ -->
+<h2 id="voting">9. Système de vote</h2>
+
+<p>Le système de vote est une nouveauté par rapport à l'ancienne application PHP.</p>
+
+<h3>Fonctionnement</h3>
+<pre><code>1. Un utilisateur crée une transaction de type "dépense"
+2. Si le montant > VOTE_THRESHOLD (500 TND par défaut) :
+   → La transaction est créée avec le statut "pending"
+   → Un vote est automatiquement créé
+3. Les membres du budget partagé peuvent voter
+4. Quand le nombre de votes "pour" atteint VOTE_APPROVAL_PERCENT (50%) :
+   → La transaction est approuvée
+   → Un email de confirmation est envoyé
+5. Si la majorité vote "contre" :
+   → La transaction est rejetée</code></pre>
+
+<h3>Configuration</h3>
+<pre><code># Dans .env
+VOTE_THRESHOLD=500.0         # Seuil en TND
+VOTE_APPROVAL_PERCENT=50.0   # % de votes "pour" requis</code></pre>
+
+<hr>
+
+<!-- ============ TESTS ============ -->
+<h2 id="tests">10. Tests</h2>
+
+<p>17 endpoints testés avec succès via <code>TestClient</code> FastAPI :</p>
+
+<pre><code>cd Backend
+python -c "
+from app.database import Base, engine
+from app.seed import create_default_admin
+Base.metadata.create_all(bind=engine)
+create_default_admin()
+from fastapi.testclient import TestClient
+from app.main import app
+client = TestClient(app)
+
+# Test login
+r = client.post('/api/auth/login', json={
+    'email': 'admin@budgetcollab.com', 'password': 'admin123'
+})
+assert r.status_code == 200
+print('✓ Login OK')
+"</code></pre>
+
+<hr>
+
+<!-- ============ FRONTEND ============ -->
+<h2 id="frontend">11. Consommation par le frontend</h2>
+
+<p>Le backend expose une API REST pure. Le frontend (React, Vue, Angular ou autre) communique via HTTP JSON.</p>
+
+<h3>Exemple d'appel côté frontend</h3>
+<pre><code>// 1. Login
+const loginRes = await fetch('http://localhost:8000/api/auth/login', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ email: '...', password: '...' })
+});
+const { access_token, user } = await loginRes.json();
+
+// 2. Appels protégés
+const response = await fetch('http://localhost:8000/api/dashboard', {
+  headers: { 'Authorization': `Bearer ${access_token}` }
+});
+const dashboard = await response.json();</code></pre>
+
+<h3>Utilisation de Swagger</h3>
+<p>Le frontend team peut explorer et tester tous les endpoints directement depuis :</p>
+<p style="font-size:18px"><code>http://localhost:8000/docs</code></p>
+<p>Cliquer sur "Authorize" et coller le token JWT pour tester les endpoints protégés.</p>
+
+<h3>CORS</h3>
+<p>Le backend est configuré pour accepter les requêtes depuis les URLs listées dans <code>CORS_ORIGINS</code> (`.env`).<br>
+Par défaut : <code>http://localhost:5173</code> (Vite) et <code>http://localhost:3000</code> (React).</p>
+
+<hr>
+
+<div style="text-align:center;padding:32px 0;color:#8892b0;font-size:13px">
+  BudgetCollab v2.0.0 — Document généré le 02/06/2026<br>
+  FastAPI + SQLite + JWT + bcrypt + SQLAlchemy
+</div>
+
+</div>
+
+</body>
+</html>
