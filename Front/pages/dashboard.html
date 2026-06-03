@@ -1,0 +1,35 @@
+<div class="page-header">
+  <div>
+    <div class="page-title" data-i18n="dashboard">Tableau de bord</div>
+    <div class="page-subtitle" id="dashDate"></div>
+  </div>
+  <div style="display:flex;align-items:center;gap:12px">
+    <span id="dashRoleInfo"></span>
+    <button class="btn btn-secondary btn-sm" onclick="openProfileModal()" data-i18n="myProfile">&#9998;&#65039; Mon profil</button>
+  </div>
+</div>
+<div id="dashAlerts"></div>
+<div class="cards-grid" id="dashCards"></div>
+<div class="two-col">
+  <div class="section">
+    <div class="section-title" style="margin-bottom:16px" data-i18n="expenseBreakdown">R&#233;partition des d&#233;penses</div>
+    <div class="chart-wrap"><canvas id="pieChart"></canvas></div>
+  </div>
+  <div class="section">
+    <div class="section-title" style="margin-bottom:16px" data-i18n="monthlyEvolution">&#201;volution mensuelle</div>
+    <div class="chart-wrap"><canvas id="lineChart"></canvas></div>
+  </div>
+</div>
+<div class="section">
+  <div class="section-header"><span class="section-title" data-i18n="recentTransactions">Transactions r&#233;centes</span></div>
+  <table class="table">
+    <thead><tr>
+      <th data-i18n="date">Date</th>
+      <th data-i18n="description">Description</th>
+      <th data-i18n="category">Cat&#233;gorie</th>
+      <th id="dashUserHeader" style="display:none" data-i18n="by">Utilisateur</th>
+      <th data-i18n="amount">Montant</th>
+    </tr></thead>
+    <tbody id="dashTxBody"></tbody>
+  </table>
+</div>
