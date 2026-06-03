@@ -81,7 +81,7 @@ async function saveTx() {
     const groupId = dest.replace('group-', '');
     const pendingId = uid();
     try {
-      await apiFetch('pending.php', {
+      await apiFetch('pending', {
         method: 'POST',
         body: { id: pendingId, groupId, desc, amount, date, catId, notes }
       });
@@ -114,7 +114,7 @@ function editTx(id) { openTxModal(id); }
 
 function deleteTx(id) {
   if (!confirm(t('confirmDelete'))) return;
-  apiFetch(`delete_transaction.php?id=${encodeURIComponent(id)}`, { method: 'DELETE' })
+  apiFetch(`delete-transaction?id=${encodeURIComponent(id)}`, { method: 'DELETE' })
     .then(() => {
       const txs = DB.get('transactions') || [];
       const tx = txs.find(t => t.id === id);

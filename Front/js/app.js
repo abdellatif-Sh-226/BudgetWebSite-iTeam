@@ -69,7 +69,8 @@ async function doRegister() {
     return;
   }
   try {
-    await apiFetch('register.php', { method: 'POST', body: { name, email, password: pwd } });
+    const data = await apiFetch('register', { method: 'POST', body: { name, email, password: pwd } });
+    _setAuth(data);
     await loadAppData();
     STATE.CU = getCurrentUser();
     if (!STATE.CU) throw new Error(t('userNotFound'));
@@ -90,7 +91,8 @@ async function doLogin() {
     return;
   }
   try {
-    await apiFetch('login.php', { method: 'POST', body: { email, password: pwd } });
+    const data = await apiFetch('login', { method: 'POST', body: { email, password: pwd } });
+    _setAuth(data);
     await loadAppData();
     STATE.CU = getCurrentUser();
     if (!STATE.CU) throw new Error(t('userNotFound'));
@@ -105,7 +107,9 @@ async function doLogin() {
 
 async function doLogout() {
   stopAutoRefresh();
-  try { await apiFetch('logout.php', { method: 'POST' }); } catch (e) { console.error('Logout error', e); }
+  try { await apiFetch('logout', { method: 'POST' }); } catch (e) { console.error('Logout error', e); }
+  _jwtToken = null;
+  localStorage.removeItem('_jwtToken');
   STATE.CU = null;
   currentUser = null;
   _isRegisterMode = true;
@@ -148,7 +152,7 @@ function startAutoRefresh() {
   if (STATE.autoRefreshInterval) clearInterval(STATE.autoRefreshInterval);
   STATE.autoRefreshInterval = setInterval(async () => {
     try {
-      const data = await apiFetch('data.php', { method: 'GET' });
+      const data = await apiFetch('data', { method: 'GET' });
       const currentPage = document.querySelector('.page.active')?.id;
       const oldTxCount = (_cache.transactions || []).length;
       const newTxCount = (data.transactions || []).length;

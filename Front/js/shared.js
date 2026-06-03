@@ -83,12 +83,12 @@ function renderShared() {
 
 async function respondPending(pendingId, action) {
   try {
-    const result = await apiFetch('approve.php', {
+    const result = await apiFetch('approve', {
       method: 'POST',
       body: { id: pendingId, action }
     });
     // Reload pending transactions
-    const data = await apiFetch('data.php', { method: 'GET' });
+    const data = await apiFetch('data', { method: 'GET' });
     _cache.pendingTransactions = data.pendingTransactions || [];
     _cache.transactions = data.transactions || [];
     _cache.notifications = data.notifications || [];

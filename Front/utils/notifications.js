@@ -9,7 +9,7 @@ function initNotifications() {
 
 async function refreshNotifications() {
   try {
-    const data = await apiFetch('notifications.php?all=1', { method: 'GET' });
+    const data = await apiFetch('notifications?all=1', { method: 'GET' });
     _cache.notifications = data.notifications || [];
     _cache.unreadCount = data.unreadCount || 0;
     _notifList = _cache.notifications;
@@ -45,7 +45,7 @@ function getUnreadCount() {
 }
 
 async function markNotifRead(id) {
-  await apiFetch('notifications.php', { method: 'POST', body: { id } });
+  await apiFetch('notifications', { method: 'POST', body: { id } });
   if (id === 'all') {
     _notifList.forEach(n => n.read = true);
     _notifUnreadCount = 0;

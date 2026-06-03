@@ -28,7 +28,7 @@ class Settings(BaseSettings):
     VOTE_THRESHOLD: float = 500.0
     VOTE_APPROVAL_PERCENT: float = 50.0
 
-    CORS_ORIGINS: str = "http://localhost:5173,http://localhost:3000"
+    CORS_ORIGINS: str = "http://localhost:5173,http://localhost:3000,http://localhost"
 
     @property
     def database_url(self) -> str:
