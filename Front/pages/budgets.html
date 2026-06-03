@@ -1,52 +1,8 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>BudgetCollab - Budgets</title>
-    <link rel="stylesheet" href="../assets/css/layout.css" />
-    <link rel="stylesheet" href="../assets/css/sidebar.css" />
-</head>
-<body>
-<div id="app" class="app-shell">
-    <aside id="sidebarRoot"></aside>
-    <main class="main-content">
-        <div class="page-header">
-            <div>
-                <div class="page-title" id="budgetPageTitle">Mes budgets</div>
-                <div class="page-subtitle" id="budgetPageSubtitle">Vous gérez uniquement vos propres budgets</div>
-            </div>
-            <button class="btn btn-sm" onclick="openBudgetModal()">+ Nouveau budget</button>
-        </div>
-        <div id="budgetList"></div>
-    </main>
-</div>
-
-<div class="modal-overlay" id="budgetModal">
-  <div class="modal">
-    <div class="modal-title">Créer un budget</div>
-    <div class="form-group"><label>Nom du budget</label><input type="text" id="budgetName" placeholder="Budget mensuel..."></div>
-    <div class="form-group"><label>Période</label><select id="budgetPeriod"><option value="monthly">Mensuel</option><option value="weekly">Hebdomadaire</option><option value="custom">Personnalisé</option></select></div>
-    <div class="form-group"><label>Plafond (TND)</label><input type="number" id="budgetLimit" placeholder="1000" min="0"></div>
-    <div class="form-group"><label>Catégorie (optionnel)</label><select id="budgetCat"><option value="">Toutes les catégories</option></select></div>
-    <div class="form-group"><label>Date de début</label><input type="date" id="budgetStart"></div>
-    <div class="form-group"><label>Date de fin</label><input type="date" id="budgetEnd"></div>
-    <div id="budgetUserRow" class="form-group" style="display:none"><label>Assigner à</label><select id="budgetUser"></select></div>
-    <div class="modal-actions">
-      <button class="btn btn-secondary" onclick="closeModal('budgetModal')">Annuler</button>
-      <button class="btn" onclick="saveBudget()">Créer</button>
-    </div>
+<div class="page-header">
+  <div>
+    <div class="page-title" id="budgetPageTitle">Mes budgets</div>
+    <div class="page-subtitle" id="budgetPageSub" style="display:none" data-i18n="userBudgets">Vous g&#233;rez uniquement vos propres budgets</div>
   </div>
+  <button class="btn btn-sm" onclick="openBudgetModal()" data-i18n="addBudget">+ Nouveau budget</button>
 </div>
-
-<script src="../languages/en.js"></script>
-<script src="../languages/fr.js"></script>
-<script type="module">
-    import { createSidebar, setSidebarLanguage } from "../components/sidebar.js";
-    setSidebarLanguage('fr');
-    const sidebarRoot = document.getElementById('sidebarRoot');
-    if (sidebarRoot) sidebarRoot.appendChild(createSidebar());
-</script>
-<script type="module" src="../js/budgets.js"></script>
-</body>
-</html>
+<div id="budgetList"></div>

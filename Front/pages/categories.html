@@ -1,154 +1,21 @@
-<!DOCTYPE html>
-
-<html lang="fr">
-
-<head>
-
-    <meta charset="UTF-8" />
-
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-    <title>BudgetCollab - Catégories</title>
-
-    <!-- CSS imports -->
-
-    <link rel="stylesheet" href="../assets/css/layout.css" />
-
-    <link rel="stylesheet" href="../assets/css/sidebar.css" />
-
-    <link rel="stylesheet" href="../assets/css/pages_css/categories.css" />
-
-</head>
-
-<body>
-
-    <div id="app" class="app-shell">
-
-        <!-- Sidebar placeholder -->
-
-        <aside id="sidebarRoot"></aside>
-
-        <!-- Main Content -->
-
-        <main class="main-content">
-
-            <div class="page-header">
-
-                <div>
-
-                    <h1 class="page-title" id="pageTitle">Mes catégories</h1>
-
-                    <p class="page-subtitle" id="pageSubtitle">Vos catégories privées — visibles uniquement par vous</p>
-
-                </div>
-
-                <button class="btn btn-sm" onclick="openCatModal()">+ Ajouter une catégorie</button>
-
-            </div>
-
-            <!-- Table Container -->
-
-            <div class="table-container" id="categoryScopeSection">
-
-                <table class="table">
-
-                    <thead>
-
-                        <tr>
-
-                            <th>Nom</th>
-
-                            <th>Couleur</th>
-
-                            <th>Utilisée dans</th>
-
-                            <th>Actions</th>
-
-                        </tr>
-
-                    </thead>
-
-                    <tbody id="catBody">
-
-                        <!-- Dynamic Categories will be injected here -->
-
-                    </tbody>
-
-                </table>
-
-            </div>
-
-        </main>
-
-    </div>
-
-    <!-- ADD/EDIT CATEGORY MODAL OVERLAY -->
-
-    <div class="modal-overlay" id="catModal">
-
-        <div class="modal">
-
-            <h3 class="modal-title" id="modalTitle">Ajouter une catégorie</h3>
-
-            <div class="form-group">
-
-                <label>Nom de la catégorie</label>
-
-                <input type="text" id="catName" placeholder="Ex: Loisirs, Alimentation...">
-
-            </div>
-
-            <div class="form-group">
-
-                <label>Couleur</label>
-
-                <div class="color-input-wrapper">
-                    <input type="color" id="catColor" value="#e94560" class="color-input" oninput="document.getElementById('colorHexPreview').textContent = this.value">
-                    <span class="color-hex-preview" id="colorHexPreview">#e94560</span>
-                </div>
-
-            </div>
-
-            <div class="modal-actions">
-
-                <button class="btn btn-secondary" onclick="closeModal('catModal')">Annuler</button>
-
-                <button class="btn" onclick="saveCat()">Enregistrer</button>
-
-            </div>
-
-        </div>
-
-    </div>
-
-    <!-- Scripts -->
-
-    <script src="../languages/en.js"></script>
-
-    <script src="../languages/fr.js"></script>
-
-    <script type="module">
-
-        import { createSidebar, setSidebarLanguage } from "../components/sidebar.js";
-
-        // Setup sidebar
-
-        setSidebarLanguage('fr');
-
-        const sidebarRoot = document.getElementById('sidebarRoot');
-
-        if (sidebarRoot) {
-
-            sidebarRoot.appendChild(createSidebar());
-
-        }
-
-    </script>
-
-    <!-- Controller Logic Script -->
-
-    <script type="module" src="../js/categories.js"></script>
-
-</body>
-
-</html>
+<div class="page-header">
+  <div>
+    <div class="page-title" id="catPageTitle">Cat&#233;gories</div>
+    <div class="page-subtitle" id="catPageSub"></div>
+  </div>
+  <button class="btn btn-sm" onclick="openCatModal()" data-i18n="addCategory">+ Ajouter</button>
+</div>
+<div class="section" id="catSection">
+  <div id="catPrivateNote" style="display:none;font-size:13px;color:var(--text-muted)" data-i18n="privateCatNote">
+    Ajoutez des cat&#233;gories priv&#233;es &#224; votre compte. Elles ne seront visibles que par vous.
+  </div>
+  <table class="table">
+    <thead><tr>
+      <th data-i18n="name">Nom</th>
+      <th data-i18n="color">Couleur</th>
+      <th data-i18n="usedIn">Utilis&#233;e dans</th>
+      <th data-i18n="actions">Actions</th>
+    </tr></thead>
+    <tbody id="catBody"></tbody>
+  </table>
+</div>

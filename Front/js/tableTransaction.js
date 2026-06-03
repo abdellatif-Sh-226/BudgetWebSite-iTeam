@@ -1,116 +1,53 @@
-// tableTransaction.js
-import { getFakeTransactions, getFakeCategories, getFakeBudgets, getFakeUsers } from '../api/usersApi.js';
+function renderTransactionsTable() {
+  const isAdmin = STATE.CU.role === 'admin';
 
-// Helper to translate text safely
-const t = (key) => window.langFR ? (window.langFR[key] || key) : key;
-const fmtSafe = (v) => Number(v).toFixed(2);
+  const userHeader = document.getElementById('txUserHeader');
+  if (userHeader) userHeader.style.display = isAdmin ? '' : 'none';
 
-// --- Data Fetchers ---
-function getCategoryInfo(catId) {
-    const cats = getFakeCategories();
-    const cat = cats.find(c => c.id === catId);
-    return cat || { name: 'Autre', color: 'var(--text-muted)' };
-}
-
-function getBudgetName(budgetId) {
-    const budgets = getFakeBudgets();
-    const budget = budgets.find(b => b.id === budgetId);
-    return budget ? budget.name : 'Autre';
-}
-
-function getUserName(userId) {
-    const users = getFakeUsers();
-    const user = users.find(u => u.id === userId);
-    return user ? user.name : 'Inconnu';
-}
-
-// --- HTML Generators ---
-function createRowHTML(tx, CU) {
-    const dateStr = new Date(tx.date).toLocaleDateString('fr-TN');
-    const noteHTML = tx.notes ? `<div class="note-text">${tx.notes}</div>` : '';
-    
-    // Use layout.css colors dynamically based on category
-    const cat = getCategoryInfo(tx.catId);
-    const catBadge = `<span class="badge" style="color: ${cat.color}; border: 1px solid ${cat.color};">${cat.name}</span>`;
-    
-    const typeClass = tx.type === 'income' ? 'badge-income' : 'badge-expense';
-    const typeLabel = tx.type === 'income' ? t('income') : t('expense');
-    const typeBadge = `<span class="badge ${typeClass}">${typeLabel}</span>`;
-    
-    const budgetBadge = `<span class="badge" style="background:var(--color-12);color:var(--text-muted);font-size:11px">${getBudgetName(tx.dest)}</span>`;
-    
-    let userCell = '';
-    if (CU.role === 'admin') {
-        userCell = `<td><span class="pill" style="font-size:12px">${getUserName(tx.userId)}</span></td>`;
+  const userFilter = document.getElementById('txFilterUser');
+  if (userFilter) {
+    userFilter.style.display = isAdmin ? '' : 'none';
+    if (isAdmin) {
+      const prev = userFilter.value;
+      userFilter.innerHTML = '<option value="">' + t('filterAllUsers') + '</option>' +
+        (DB.get('users') || []).map(u => `<option value="${u.id}">${u.name}</option>`).join('');
+      if (prev) userFilter.value = prev;
     }
-    
-    const amountColor = tx.type === 'income' ? 'var(--success)' : 'var(--danger)';
-    const amountSign = tx.type === 'income' ? '+' : '−';
-    const amountCell = `<td style="font-weight:600;color:${amountColor}">${amountSign}${fmtSafe(tx.amount)}</td>`;
-    
-    let actionsHTML = '<span class="text-muted">—</span>';
-    if (tx.userId === CU.id || CU.role === 'admin') {
-        actionsHTML = `
-            <button class="icon-btn" onclick="editTx('${tx.id}')">✏️</button>
-            <button class="icon-btn del" onclick="deleteTx('${tx.id}')">🗑️</button>
-        `;
-    }
+  }
 
-    return `
-        <tr>
-            <td class="text-muted">${dateStr}</td>
-            <td>${tx.desc}${noteHTML}</td>
-            <td>${catBadge}</td>
-            <td>${typeBadge}</td>
-            <td>${budgetBadge}</td>
-            ${userCell}
-            ${amountCell}
-            <td><div class="actions">${actionsHTML}</div></td>
-        </tr>
-    `;
-}
-
-// --- Main Render Function ---
-export function renderTransactionsTable() {
+  const cats = getVisibleCatsForUser();
   const catSel = document.getElementById('txFilterCat');
-  
-  // Populate category filter from fake API
-  if (catSel && catSel.children.length <= 1) {
-    const cats = getFakeCategories();
-    catSel.innerHTML = '<option value="" data-translate="allCategories">Toutes catégories</option>' + 
-        cats.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+  if (catSel) {
+    const prev = catSel.value;
+    catSel.innerHTML = '<option value="">' + t('filterAllCats') + '</option>' + cats.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+    if (prev) catSel.value = prev;
   }
 
   const filterType = document.getElementById('txFilterType')?.value || '';
   const filterCat = document.getElementById('txFilterCat')?.value || '';
   const filterUser = document.getElementById('txFilterUser')?.value || '';
-  
-  let txs = getFakeTransactions().sort((a, b) => new Date(b.date) - new Date(a.date));
+  let txs = getScopedTxs().sort((a, b) => new Date(b.date) - new Date(a.date));
 
-  // Apply filters
-  if (filterType) txs = txs.filter(tx => tx.type === filterType);
-  if (filterCat) txs = txs.filter(tx => tx.catId === filterCat);
-  if (filterUser) txs = txs.filter(tx => tx.userId === filterUser);
+  if (filterType) txs = txs.filter(t => t.type === filterType);
+  if (filterCat) txs = txs.filter(t => t.catId === filterCat);
+  if (filterUser) txs = txs.filter(t => t.userId === filterUser);
 
+  const colspan = isAdmin ? 8 : 7;
   const txBody = document.getElementById('txBody');
   if (!txBody) return;
-
-  const CU = window.CU || { role: 'admin', id: '1' };
-
-  // Render Table Body
-  if (txs.length > 0) {
-      txBody.innerHTML = txs.map(tx => createRowHTML(tx, CU)).join('');
-  } else {
-      txBody.innerHTML = `<tr><td colspan="${CU.role === 'admin' ? 8 : 7}" class="empty-state" data-translate="noTransactions">Aucune transaction</td></tr>`;
-  }
+  txBody.innerHTML = txs.length
+    ? txs.map(tx => `
+    <tr>
+      <td class="text-muted">${new Date(tx.date).toLocaleDateString('fr-TN')}</td>
+      <td>${tx.desc}${tx.notes ? `<div class="note-text">${tx.notes}</div>` : ''}</td>
+      <td><span class="badge" style="background:${getCatColor(tx.catId)}22;color:${getCatColor(tx.catId)}">${getCatName(tx.catId)}</span></td>
+      <td><span class="badge badge-${tx.type}">${tx.type === 'income' ? t('incomeLabel') : t('expenseLabel')}</span></td>
+      <td><span class="badge" style="background:rgba(255,255,255,0.08);color:var(--text-muted);font-size:11px">${getBudgetName(tx.dest)}</span></td>
+      ${isAdmin ? `<td><span class="pill" style="font-size:12px">${getUserName(tx.userId)}</span></td>` : ''}
+      <td style="font-weight:600;color:${tx.type === 'income' ? 'var(--success)' : 'var(--danger)'}">${tx.type === 'income' ? '+' : '\u2212'}${fmt(tx.amount)}</td>
+      <td><div class="actions">
+        ${(tx.userId === STATE.CU.id || isAdmin) ? `<button class="icon-btn" onclick="editTx('${tx.id}')">\u270F\uFE0F</button><button class="icon-btn del" onclick="deleteTx('${tx.id}')">\uD83D\uDDD1\uFE0F</button>` : '<span class="text-muted">\u2014</span>'}
+      </div></td>
+    </tr>`).join('')
+    : `<tr><td colspan="${colspan}" class="empty-state">${t('noTransaction')}</td></tr>`;
 }
-
-// Ensure the table renders and filters work on load
-document.addEventListener('DOMContentLoaded', () => {
-    ['txFilterType', 'txFilterCat', 'txFilterUser'].forEach(id => {
-        const el = document.getElementById(id);
-        if(el) el.addEventListener('change', renderTransactionsTable);
-    });
-    // initial render
-    renderTransactionsTable();
-});

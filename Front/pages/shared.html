@@ -1,52 +1,8 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>BudgetCollab - Budgets partagés</title>
-    <link rel="stylesheet" href="../assets/css/layout.css" />
-    <link rel="stylesheet" href="../assets/css/sidebar.css" />
-</head>
-<body>
-<div id="app" class="app-shell">
-    <aside id="sidebarRoot"></aside>
-    <main class="main-content">
-        <div class="page-header">
-            <div>
-                <div class="page-title">Budgets partagés</div>
-                <div class="page-subtitle" id="sharedSubtitle">Les budgets dont vous faites partie</div>
-            </div>
-            <button class="btn btn-sm" onclick="openSharedModal()">+ Créer</button>
-        </div>
-        <div id="sharedList"></div>
-    </main>
-</div>
-
-<div class="modal-overlay" id="sharedModal">
-  <div class="modal">
-    <div class="modal-title" id="sharedModalTitle">Créer un budget partagé</div>
-    <div class="form-group"><label>Nom du groupe</label><input type="text" id="sharedName" placeholder="Ex: Colocation Tunis..."></div>
-    <div class="form-group"><label>Description</label><input type="text" id="sharedDesc" placeholder="Budget commun pour..."></div>
-    <div class="form-group"><label>Plafond (TND)</label><input type="number" id="sharedLimit" placeholder="2000"></div>
-    <div class="form-group"><label>Ajouter membre (email)</label>
-      <div class="shared-member-row"><input type="email" id="sharedMemberEmail" placeholder="membre@email.com"><button class="btn btn-secondary btn-sm" onclick="addSharedMember()">+</button></div>
-    </div>
-    <div id="sharedMembersList" class="shared-members-list"></div>
-    <div class="modal-actions">
-      <button class="btn btn-secondary" onclick="closeModal('sharedModal')">Annuler</button>
-      <button class="btn" onclick="saveShared()">Créer</button>
-    </div>
+<div class="page-header">
+  <div>
+    <div class="page-title" data-i18n="sharedBudgets">Budgets partag&#233;s</div>
+    <div class="page-subtitle" id="sharedPageSub">Les budgets partag&#233;s</div>
   </div>
+  <button class="btn btn-sm" onclick="openSharedModal()" data-i18n="addShared">+ Cr&#233;er</button>
 </div>
-
-<script src="../languages/en.js"></script>
-<script src="../languages/fr.js"></script>
-<script type="module">
-    import { createSidebar, setSidebarLanguage } from "../components/sidebar.js";
-    setSidebarLanguage('fr');
-    const sidebarRoot = document.getElementById('sidebarRoot');
-    if (sidebarRoot) sidebarRoot.appendChild(createSidebar());
-</script>
-<script type="module" src="../js/shared.js"></script>
-</body>
-</html>
+<div id="sharedList"></div>
